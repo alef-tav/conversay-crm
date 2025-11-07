@@ -57,6 +57,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        stage: {
+          lead: "hsl(var(--stage-lead))",
+          qualificado: "hsl(var(--stage-qualificado))",
+          negociacao: "hsl(var(--stage-negociacao))",
+          cliente: "hsl(var(--stage-cliente))",
+          inativo: "hsl(var(--stage-inativo))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
