@@ -1,29 +1,18 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Plus, CalendarIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-
-interface AddAppointmentDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
 
 interface Contact {
   id: string;
@@ -31,14 +20,15 @@ interface Contact {
   phone: string;
 }
 
-const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps) => {
+const AddAppointmentDialog = () => {
+  const [open, setOpen] = useState(false);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [contactId, setContactId] = useState("");
+  const [title, setTitle] = useState("");
   const [agentName, setAgentName] = useState("");
   const [date, setDate] = useState<Date>();
-  const [time, setTime] = useState("09:00");
+  const [time, setTime] = useState("10:00");
   const [duration, setDuration] = useState("30");
-  const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -55,18 +45,25 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
       .select("id, name, phone")
       .order("name");
 
-    if (!error && data) {
-      setContacts(data);
+    if (error) {
+      toast({
+        title: "Erro ao carregar contatos",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
     }
+
+    setContacts(data || []);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!date || !contactId || !agentName || !title) {
+    if (!date) {
       toast({
-        title: "Campos obrigatórios",
-        description: "Por favor, preencha todos os campos obrigatórios.",
+        title: "Data obrigatória",
+        description: "Por favor, selecione uma data para o agendamento.",
         variant: "destructive",
       });
       return;
@@ -82,10 +79,10 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
     const { error } = await supabase.from("appointments").insert([
       {
         contact_id: contactId,
+        title,
         agent_name: agentName,
         scheduled_at: scheduledAt.toISOString(),
         duration: parseInt(duration),
-        title,
         notes: notes || null,
         status: "scheduled",
       },
@@ -93,16 +90,16 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
 
     if (error) {
       toast({
-        title: "Erro ao agendar call",
+        title: "Erro ao criar agendamento",
         description: error.message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Call agendada",
+        title: "Agendamento criado",
         description: "O agendamento foi criado com sucesso.",
       });
-      onOpenChange(false);
+      setOpen(false);
       resetForm();
     }
 
@@ -111,25 +108,31 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
 
   const resetForm = () => {
     setContactId("");
+    setTitle("");
     setAgentName("");
     setDate(undefined);
-    setTime("09:00");
+    setTime("10:00");
     setDuration("30");
-    setTitle("");
     setNotes("");
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="gap-2">
+          <Plus className="w-4 h-4" />
+          Novo Agendamento
+        </Button>
+      </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Agendar Call com Cliente</DialogTitle>
+          <DialogTitle>Novo Agendamento de Call</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="contact">Cliente *</Label>
-              <Select value={contactId} onValueChange={setContactId}>
+              <Label htmlFor="contact">Cliente</Label>
+              <Select value={contactId} onValueChange={setContactId} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o cliente" />
                 </SelectTrigger>
@@ -144,7 +147,7 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="agent">Agente Responsável *</Label>
+              <Label htmlFor="agent">Agente Responsável</Label>
               <Input
                 id="agent"
                 value={agentName}
@@ -156,30 +159,30 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="title">Título da Call *</Label>
+            <Label htmlFor="title">Título da Call</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ex: Apresentação de proposta"
+              placeholder="Ex: Apresentação de Proposta"
               required
             />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>Data *</Label>
+              <Label>Data</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     className={cn(
                       "w-full justify-start text-left font-normal",
                       !date && "text-muted-foreground"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "dd/MM/yyyy") : "Selecione"}
+                    {date ? format(date, "dd/MM/yyyy", { locale: ptBR }) : "Selecionar"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -196,7 +199,7 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="time">Horário *</Label>
+              <Label htmlFor="time">Horário</Label>
               <Input
                 id="time"
                 type="time"
@@ -207,7 +210,7 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="duration">Duração (min) *</Label>
+              <Label htmlFor="duration">Duração (min)</Label>
               <Select value={duration} onValueChange={setDuration}>
                 <SelectTrigger>
                   <SelectValue />
@@ -230,22 +233,22 @@ const AddAppointmentDialog = ({ open, onOpenChange }: AddAppointmentDialogProps)
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Adicione notas sobre a call..."
+              placeholder="Adicione observações sobre a call..."
               rows={3}
             />
           </div>
 
-          <div className="flex gap-2 pt-4">
+          <div className="flex gap-2">
             <Button
               type="button"
               variant="secondary"
-              onClick={() => onOpenChange(false)}
+              onClick={() => setOpen(false)}
               className="flex-1"
             >
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="flex-1">
-              {loading ? "Agendando..." : "Agendar Call"}
+              {loading ? "Salvando..." : "Agendar Call"}
             </Button>
           </div>
         </form>
