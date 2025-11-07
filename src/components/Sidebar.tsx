@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, MessageSquare, LayoutGrid, BarChart3, CreditCard, Settings } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, LayoutGrid, BarChart3, Calendar, Settings } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,7 @@ const Sidebar = () => {
     { icon: MessageSquare, label: "Conversas", path: "/conversas" },
     { icon: LayoutGrid, label: "CRM", path: "/" },
     { icon: BarChart3, label: "Métricas", path: "/metricas" },
-    { icon: CreditCard, label: "Planos", path: "/planos" },
+    { icon: Calendar, label: "Agenda", path: "/agenda" },
   ];
 
   const adminItems = [
