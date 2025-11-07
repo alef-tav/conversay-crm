@@ -19,7 +19,7 @@ const Sidebar = () => {
   return (
     <aside className="w-52 h-screen bg-sidebar border-r border-sidebar-border flex flex-col">
       <div className="p-4 border-b border-sidebar-border">
-        <h1 className="text-xl font-bold text-foreground">ConversayCRM</h1>
+        <h1 className="text-xl font-bold text-foreground">Dashboard-CRM</h1>
       </div>
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
