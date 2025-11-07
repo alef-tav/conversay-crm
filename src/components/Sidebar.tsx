@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, MessageSquare, LayoutGrid, BarChart3, CreditCard, ShieldCheck, UserCog, Settings } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, LayoutGrid, BarChart3, CreditCard, Settings } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
 
@@ -13,9 +13,7 @@ const Sidebar = () => {
   ];
 
   const adminItems = [
-    { icon: ShieldCheck, label: "Admin: Agentes", path: "/admin/agentes" },
-    { icon: UserCog, label: "Admin: Usuários", path: "/admin/usuarios" },
-    { icon: Settings, label: "Admin: Planos", path: "/admin/planos" },
+    { icon: Settings, label: "Configurações", path: "/configuracoes" },
   ];
 
   return (
