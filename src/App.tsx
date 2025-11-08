@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
 import Agenda from "./pages/Agenda";
 import Conversas from "./pages/Conversas";
 import NotFound from "./pages/NotFound";
@@ -22,7 +23,7 @@ const App = () => (
           <main className="flex-1 overflow-auto">
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<Index />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/agentes" element={<Index />} />
               <Route path="/conversas" element={<Conversas />} />
               <Route path="/metricas" element={<Index />} />
