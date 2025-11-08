@@ -61,7 +61,7 @@ const Dashboard = () => {
   // KPIs
   const totalContacts = contacts.length;
   const totalLeads = contacts.filter(c => c.stage === 'lead').length;
-  const totalClients = contacts.filter(c => c.stage === 'client').length;
+  const totalClients = contacts.filter(c => c.stage === 'cliente').length;
   const conversionRate = totalContacts > 0 ? ((totalClients / totalContacts) * 100).toFixed(1) : 0;
   const totalConversations = conversations.reduce((sum, conv) => sum + conv.message_count, 0);
   const upcomingAppointments = appointments.filter(a => 
@@ -102,10 +102,11 @@ const Dashboard = () => {
   // Dados para gráficos
   const stageData = [
     { name: 'Leads', value: totalLeads, color: '#3b82f6' },
-    { name: 'Contatos', value: contacts.filter(c => c.stage === 'contact').length, color: '#8b5cf6' },
-    { name: 'Qualificados', value: contacts.filter(c => c.stage === 'qualified').length, color: '#ec4899' },
-    { name: 'Clientes', value: totalClients, color: '#10b981' }
-  ];
+    { name: 'Qualificados', value: contacts.filter(c => c.stage === 'qualificado').length, color: '#8b5cf6' },
+    { name: 'Negociação', value: contacts.filter(c => c.stage === 'negociacao').length, color: '#ec4899' },
+    { name: 'Clientes', value: totalClients, color: '#10b981' },
+    { name: 'Inativos', value: contacts.filter(c => c.stage === 'inativo').length, color: '#6b7280' }
+  ].filter(stage => stage.value > 0);
 
   // Atividades dos últimos 7 dias
   const last7Days = Array.from({ length: 7 }, (_, i) => {
