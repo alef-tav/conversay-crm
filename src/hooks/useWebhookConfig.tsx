@@ -88,38 +88,6 @@ export const useWebhookConfig = () => {
     },
   });
 
-  const testConnectionMutation = useMutation({
-    mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke("test-webhook-connection", {
-        body: { webhook_url: config?.webhook_url },
-      });
-
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: (data) => {
-      if (data.success) {
-        toast({
-          title: "Conexão bem-sucedida",
-          description: "O webhook está respondendo corretamente.",
-        });
-      } else {
-        toast({
-          title: "Falha na conexão",
-          description: data.message || "Não foi possível conectar ao webhook.",
-          variant: "destructive",
-        });
-      }
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Erro ao testar conexão",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
   const toggleActiveMutation = useMutation({
     mutationFn: async (isActive: boolean) => {
       if (!config?.id) throw new Error("No configuration found");
@@ -148,8 +116,6 @@ export const useWebhookConfig = () => {
     isLoading,
     saveConfig: saveMutation.mutate,
     isSaving: saveMutation.isPending,
-    testConnection: testConnectionMutation.mutate,
-    isTesting: testConnectionMutation.isPending,
     toggleActive: toggleActiveMutation.mutate,
   };
 };

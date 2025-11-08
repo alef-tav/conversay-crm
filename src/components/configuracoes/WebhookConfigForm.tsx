@@ -1,103 +1,53 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useWebhookConfig } from "@/hooks/useWebhookConfig";
-import { Loader2 } from "lucide-react";
+import { Copy, Check } from "lucide-react";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 
-const formSchema = z.object({
-  webhook_url: z.string().url({ message: "URL inválida" }).nonempty({ message: "URL é obrigatória" }),
-  webhook_token: z.string().optional(),
-  verify_token: z.string().optional(),
-});
+export const WebhookConfigForm = () => {
+  const projectId = "mxodnxejdlxyxeaczpma";
+  const webhookUrl = `https://${projectId}.supabase.co/functions/v1/webhook-whatsapp`;
+  const [copied, setCopied] = useState(false);
 
-interface WebhookConfigFormProps {
-  config: any;
-}
-
-export const WebhookConfigForm = ({ config }: WebhookConfigFormProps) => {
-  const { saveConfig, isSaving } = useWebhookConfig();
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      webhook_url: config?.webhook_url || "",
-      webhook_token: config?.webhook_token || "",
-      verify_token: config?.verify_token || "",
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    saveConfig(values);
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(webhookUrl);
+    setCopied(true);
+    toast({
+      title: "URL copiada!",
+      description: "A URL do webhook foi copiada para a área de transferência.",
+    });
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="webhook_url"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL do Webhook</FormLabel>
-              <FormControl>
-                <Input placeholder="https://api.exemplo.com/webhook" {...field} />
-              </FormControl>
-              <FormDescription>
-                URL da sua API de WhatsApp que enviará as mensagens
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="webhook_token"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Token de Autenticação</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
-              </FormControl>
-              <FormDescription>
-                Token para autenticar as requisições (opcional)
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="verify_token"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Token de Verificação</FormLabel>
-              <FormControl>
-                <Input placeholder="token-verificacao" {...field} />
-              </FormControl>
-              <FormDescription>
-                Token usado para verificar o webhook (opcional)
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" disabled={isSaving} className="w-full">
-          {isSaving ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Salvando...
-            </>
-          ) : (
-            "Salvar Configuração"
-          )}
-        </Button>
-      </form>
-    </Form>
+    <Card>
+      <CardHeader>
+        <CardTitle>URL do Webhook do Supabase</CardTitle>
+        <CardDescription>
+          Use esta URL no final do seu workflow do n8n para enviar os dados ao dashboard
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex gap-2">
+          <Input 
+            value={webhookUrl} 
+            readOnly 
+            className="font-mono text-sm"
+          />
+          <Button 
+            onClick={copyToClipboard}
+            variant="outline"
+            size="icon"
+            className="shrink-0"
+          >
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Cole esta URL em um nó HTTP Request no seu workflow do n8n para enviar os dados processados ao Supabase.
+        </p>
+      </CardContent>
+    </Card>
   );
 };
