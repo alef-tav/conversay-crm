@@ -16,43 +16,47 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const AppLayout = () => (
-  <div className="flex w-full min-h-screen">
-    <Sidebar />
-    <main className="flex-1 overflow-auto">
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/agentes" element={<Index />} />
-        <Route path="/conversas" element={<Conversas />} />
-        <Route path="/metricas" element={<Index />} />
-        <Route path="/agenda" element={<Agenda />} />
-        <Route path="/configuracoes" element={<Index />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </main>
-  </div>
-);
+function AppLayout() {
+  return (
+    <div className="flex w-full min-h-screen">
+      <Sidebar />
+      <main className="flex-1 overflow-auto">
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/agentes" element={<Index />} />
+          <Route path="/conversas" element={<Conversas />} />
+          <Route path="/metricas" element={<Index />} />
+          <Route path="/agenda" element={<Agenda />} />
+          <Route path="/configuracoes" element={<Index />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/*" element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/*" element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
