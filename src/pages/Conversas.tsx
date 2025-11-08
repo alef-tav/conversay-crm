@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Send, Filter } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { Tables } from "@/integrations/supabase/types";
@@ -19,6 +20,7 @@ type Conversation = Tables<"conversations"> & {
 type Message = Tables<"messages">;
 
 const Conversas = () => {
+  const { user, profile } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -116,7 +118,7 @@ const Conversas = () => {
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedConversation) return;
+    if (!newMessage.trim() || !selectedConversation || !user || !profile) return;
 
     try {
       const { error } = await supabase
@@ -125,7 +127,7 @@ const Conversas = () => {
           conversation_id: selectedConversation,
           content: newMessage,
           sender_type: 'agent',
-          sender_name: 'Gabriel Henrique',
+          sender_name: profile.full_name,
         });
 
       if (error) throw error;

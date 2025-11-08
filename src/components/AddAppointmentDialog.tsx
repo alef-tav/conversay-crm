@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Plus, CalendarIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ interface Contact {
 }
 
 const AddAppointmentDialog = () => {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [contactId, setContactId] = useState("");
@@ -60,6 +62,15 @@ const AddAppointmentDialog = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!user) {
+      toast({
+        title: "Erro de autenticação",
+        description: "Você precisa estar logado para criar agendamentos.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (!date) {
       toast({
         title: "Data obrigatória",
@@ -85,6 +96,7 @@ const AddAppointmentDialog = () => {
         duration: parseInt(duration),
         notes: notes || null,
         status: "scheduled",
+        user_id: user.id,
       },
     ]);
 

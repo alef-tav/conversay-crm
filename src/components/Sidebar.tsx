@@ -1,8 +1,10 @@
-import { LayoutDashboard, Users, MessageSquare, LayoutGrid, BarChart3, Calendar, Settings } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, LayoutGrid, BarChart3, Calendar, Settings, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const Sidebar = () => {
+  const { profile, signOut } = useAuth();
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
     { icon: Users, label: "Agentes", path: "/agentes" },
@@ -60,11 +62,17 @@ const Sidebar = () => {
       <div className="p-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold">
-            GH
+            {profile?.full_name?.charAt(0).toUpperCase() || 'U'}
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-foreground">Gabriel Henrique</p>
-            <button className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground truncate">
+              {profile?.full_name || 'Usuário'}
+            </p>
+            <button 
+              onClick={signOut}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              <LogOut className="w-3 h-3" />
               Sair
             </button>
           </div>
