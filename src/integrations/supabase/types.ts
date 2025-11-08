@@ -275,6 +275,95 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_configs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          is_active: boolean | null
+          last_sync: string | null
+          metadata: Json | null
+          provider: string
+          sync_status: string | null
+          updated_at: string
+          user_id: string
+          verify_token: string | null
+          webhook_token: string | null
+          webhook_url: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync?: string | null
+          metadata?: Json | null
+          provider?: string
+          sync_status?: string | null
+          updated_at?: string
+          user_id: string
+          verify_token?: string | null
+          webhook_token?: string | null
+          webhook_url: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync?: string | null
+          metadata?: Json | null
+          provider?: string
+          sync_status?: string | null
+          updated_at?: string
+          user_id?: string
+          verify_token?: string | null
+          webhook_token?: string | null
+          webhook_url?: string
+        }
+        Relationships: []
+      }
+      webhook_logs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_type: string
+          id: string
+          payload: Json | null
+          response_time_ms: number | null
+          status_code: number | null
+          webhook_config_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          id?: string
+          payload?: Json | null
+          response_time_ms?: number | null
+          status_code?: number | null
+          webhook_config_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          response_time_ms?: number | null
+          status_code?: number | null
+          webhook_config_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_logs_webhook_config_id_fkey"
+            columns: ["webhook_config_id"]
+            isOneToOne: false
+            referencedRelation: "webhook_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

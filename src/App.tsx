@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import Metricas from "./pages/Metricas";
 import Agenda from "./pages/Agenda";
 import Conversas from "./pages/Conversas";
+import Configuracoes from "./pages/Configuracoes";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -31,7 +32,7 @@ const AppLayout: React.FC = () => {
           <Route path="/conversas" element={<Conversas />} />
           <Route path="/metricas" element={<Metricas />} />
           <Route path="/agenda" element={<Agenda />} />
-          <Route path="/configuracoes" element={<Crm />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
