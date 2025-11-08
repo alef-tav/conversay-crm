@@ -137,7 +137,7 @@ export type Database = {
         Row: {
           contact_id: string
           created_at: string
-          id: string
+          id: number
           message_count: number
           updated_at: string
           user_id: string | null
@@ -145,7 +145,7 @@ export type Database = {
         Insert: {
           contact_id: string
           created_at?: string
-          id?: string
+          id?: number
           message_count?: number
           updated_at?: string
           user_id?: string | null
@@ -153,7 +153,7 @@ export type Database = {
         Update: {
           contact_id?: string
           created_at?: string
-          id?: string
+          id?: number
           message_count?: number
           updated_at?: string
           user_id?: string | null
@@ -167,6 +167,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      conversations_backup: {
+        Row: {
+          contact_id: string | null
+          created_at: string | null
+          id: string | null
+          message_count: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          contact_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          message_count?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          contact_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          message_count?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       message_templates: {
         Row: {
@@ -207,9 +234,9 @@ export type Database = {
       messages: {
         Row: {
           content: string
-          conversation_id: string
+          conversation_id: number
           created_at: string
-          id: string
+          id: number
           metadata: Json | null
           read: boolean
           sender_name: string | null
@@ -217,9 +244,9 @@ export type Database = {
         }
         Insert: {
           content: string
-          conversation_id: string
+          conversation_id: number
           created_at?: string
-          id?: string
+          id?: number
           metadata?: Json | null
           read?: boolean
           sender_name?: string | null
@@ -227,9 +254,9 @@ export type Database = {
         }
         Update: {
           content?: string
-          conversation_id?: string
+          conversation_id?: number
           created_at?: string
-          id?: string
+          id?: number
           metadata?: Json | null
           read?: boolean
           sender_name?: string | null
