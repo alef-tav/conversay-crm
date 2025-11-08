@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Index from "./pages/Index";
 import Agenda from "./pages/Agenda";
+import Conversas from "./pages/Conversas";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,7 +24,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Index />} />
               <Route path="/agentes" element={<Index />} />
-              <Route path="/conversas" element={<Index />} />
+              <Route path="/conversas" element={<Conversas />} />
               <Route path="/metricas" element={<Index />} />
               <Route path="/agenda" element={<Agenda />} />
               <Route path="/configuracoes" element={<Index />} />
