@@ -23,7 +23,7 @@ type Message = Tables<"messages">;
 const Conversas = () => {
   const { user, profile } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -87,7 +87,7 @@ const Conversas = () => {
     }
   };
 
-  const fetchMessages = async (conversationId: string) => {
+  const fetchMessages = async (conversationId: number) => {
     try {
       const { data, error } = await supabase
         .from('messages')
@@ -113,7 +113,7 @@ const Conversas = () => {
     }
   };
 
-  const handleConversationSelect = (conversationId: string) => {
+  const handleConversationSelect = (conversationId: number) => {
     setSelectedConversation(conversationId);
     fetchMessages(conversationId);
   };
@@ -150,7 +150,7 @@ const Conversas = () => {
     }
   };
 
-  const getUnreadCount = (conversationId: string) => {
+  const getUnreadCount = (conversationId: number) => {
     return messages.filter(m => m.conversation_id === conversationId && !m.read && m.sender_type === 'customer').length;
   };
 
