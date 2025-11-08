@@ -4,6 +4,7 @@ import { WebhookConfigForm } from "@/components/configuracoes/WebhookConfigForm"
 import { WebhookStatusIndicator } from "@/components/configuracoes/WebhookStatusIndicator";
 import { WebhookLogsList } from "@/components/configuracoes/WebhookLogsList";
 import { WebhookInstructions } from "@/components/configuracoes/WebhookInstructions";
+import { MessageTemplateList } from "@/components/configuracoes/MessageTemplateList";
 import { useWebhookConfig } from "@/hooks/useWebhookConfig";
 import { Loader2 } from "lucide-react";
 
@@ -30,6 +31,7 @@ const Configuracoes = () => {
       <Tabs defaultValue="webhook" className="w-full">
         <TabsList>
           <TabsTrigger value="webhook">WhatsApp Webhook</TabsTrigger>
+          <TabsTrigger value="templates">Templates de Mensagens</TabsTrigger>
           <TabsTrigger value="logs">Histórico</TabsTrigger>
           <TabsTrigger value="instructions">Instruções</TabsTrigger>
         </TabsList>
@@ -60,6 +62,10 @@ const Configuracoes = () => {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="templates">
+          <MessageTemplateList />
         </TabsContent>
 
         <TabsContent value="logs">

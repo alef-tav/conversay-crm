@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Send, Filter } from "lucide-react";
+import { MessageTemplateSelector } from "@/components/MessageTemplateSelector";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
@@ -302,18 +303,23 @@ const Conversas = () => {
 
               {/* Input de mensagem */}
               <div className="border-t border-border p-4">
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Digite sua mensagem..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage();
-                      }
-                    }}
-                  />
+                <div className="flex gap-2 items-end">
+                  <div className="flex-1 space-y-2">
+                    <MessageTemplateSelector 
+                      onSelectTemplate={(content) => setNewMessage(content)}
+                    />
+                    <Input
+                      placeholder="Digite sua mensagem..."
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendMessage();
+                        }
+                      }}
+                    />
+                  </div>
                   <Button onClick={handleSendMessage} size="icon">
                     <Send className="w-4 h-4" />
                   </Button>
