@@ -7,7 +7,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./hooks/useAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Sidebar from "./components/Sidebar";
-import Index from "./pages/Index";
+import Crm from "./pages/Crm";
+import Agentes from "./pages/Agentes";
 import Dashboard from "./pages/Dashboard";
 import Agenda from "./pages/Agenda";
 import Conversas from "./pages/Conversas";
@@ -24,11 +25,12 @@ const AppLayout: React.FC = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/agentes" element={<Index />} />
+          <Route path="/crm" element={<Crm />} />
+          <Route path="/agentes" element={<Agentes />} />
           <Route path="/conversas" element={<Conversas />} />
-          <Route path="/metricas" element={<Index />} />
+          <Route path="/metricas" element={<Crm />} />
           <Route path="/agenda" element={<Agenda />} />
-          <Route path="/configuracoes" element={<Index />} />
+          <Route path="/configuracoes" element={<Crm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

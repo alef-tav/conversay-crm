@@ -7,9 +7,9 @@ const Sidebar = () => {
   const { profile, signOut } = useAuth();
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+    { icon: LayoutGrid, label: "CRM", path: "/crm" },
     { icon: Users, label: "Agentes", path: "/agentes" },
     { icon: MessageSquare, label: "Conversas", path: "/conversas" },
-    { icon: LayoutGrid, label: "CRM", path: "/" },
     { icon: BarChart3, label: "Métricas", path: "/metricas" },
     { icon: Calendar, label: "Agenda", path: "/agenda" },
   ];
@@ -29,7 +29,6 @@ const Sidebar = () => {
           <NavLink
             key={item.path}
             to={item.path}
-            end={item.path === "/"}
             className={cn(
               "flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-foreground",
               "hover:bg-sidebar-accent transition-colors"
