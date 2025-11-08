@@ -10,6 +10,7 @@ import Sidebar from "./components/Sidebar";
 import Crm from "./pages/Crm";
 import Agentes from "./pages/Agentes";
 import Dashboard from "./pages/Dashboard";
+import Metricas from "./pages/Metricas";
 import Agenda from "./pages/Agenda";
 import Conversas from "./pages/Conversas";
 import Auth from "./pages/Auth";
@@ -28,7 +29,7 @@ const AppLayout: React.FC = () => {
           <Route path="/crm" element={<Crm />} />
           <Route path="/agentes" element={<Agentes />} />
           <Route path="/conversas" element={<Conversas />} />
-          <Route path="/metricas" element={<Crm />} />
+          <Route path="/metricas" element={<Metricas />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/configuracoes" element={<Crm />} />
           <Route path="*" element={<NotFound />} />
