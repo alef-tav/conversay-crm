@@ -16,7 +16,7 @@ serve(async (req) => {
   try {
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+      Deno.env.get("SUPABASE_SERVICE_KEY") ?? ""
     );
 
     const payload = await req.json();
@@ -161,7 +161,7 @@ serve(async (req) => {
     // Log error
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+      Deno.env.get("SUPABASE_SERVICE_KEY") ?? ""
     );
 
     const { data: webhookConfig } = await supabaseClient
