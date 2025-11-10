@@ -39,27 +39,30 @@ const LeadCard = ({ contact, provided, isDragging, onDelete }: LeadCardProps) =>
     try {
       setIsDeleting(true);
       
-      // Primeiro deletar as conversas relacionadas
+      // Primeiro buscar as conversas relacionadas
+      const { data: conversations } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('contact_id', contact.id);
+
+      // Deletar as mensagens dessas conversas
+      if (conversations && conversations.length > 0) {
+        const conversationIds = conversations.map(c => c.id);
+        const { error: messagesError } = await supabase
+          .from('messages')
+          .delete()
+          .in('conversation_id', conversationIds);
+        
+        if (messagesError) throw messagesError;
+      }
+
+      // Deletar as conversas
       const { error: conversationsError } = await supabase
         .from('conversations')
         .delete()
         .eq('contact_id', contact.id);
       
       if (conversationsError) throw conversationsError;
-
-      // Depois deletar as mensagens através das conversas
-      const { data: conversations } = await supabase
-        .from('conversations')
-        .select('id')
-        .eq('contact_id', contact.id);
-
-      if (conversations && conversations.length > 0) {
-        const conversationIds = conversations.map(c => c.id);
-        await supabase
-          .from('messages')
-          .delete()
-          .in('conversation_id', conversationIds);
-      }
 
       // Deletar as tags do contato
       const { error: tagsError } = await supabase
