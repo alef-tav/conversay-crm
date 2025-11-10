@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, MessageSquare, Calendar, TrendingUp, Phone, UserCheck, Clock, AlertCircle } from "lucide-react";
+import { Users, MessageSquare, Calendar, TrendingUp, Phone, UserCheck, Clock, AlertCircle, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { toast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Contact = Tables<"contacts">;
@@ -154,9 +156,21 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background p-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">Visão geral das métricas e atividades do CRM</p>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+          <p className="text-muted-foreground">Visão geral das métricas e atividades do CRM</p>
+        </div>
+        <Button
+          onClick={fetchDashboardData}
+          variant="outline"
+          size="sm"
+          disabled={loading}
+          className="gap-2"
+        >
+          <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
+          Atualizar
+        </Button>
       </div>
 
       {/* KPIs */}

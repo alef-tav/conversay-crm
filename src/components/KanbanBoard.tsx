@@ -163,11 +163,12 @@ const KanbanBoard = () => {
                     {stageContacts.map((contact, index) => (
                       <Draggable key={contact.id} draggableId={contact.id} index={index}>
                         {(provided, snapshot) => (
-                          <LeadCard
-                            contact={contact}
-                            provided={provided}
-                            isDragging={snapshot.isDragging}
-                          />
+                        <LeadCard
+                          contact={contact}
+                          provided={provided}
+                          isDragging={snapshot.isDragging}
+                          onDelete={fetchContacts}
+                        />
                         )}
                       </Draggable>
                     ))}
