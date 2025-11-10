@@ -7,6 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Users, UserPlus, Search, TrendingUp, MessageSquare, Phone } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Profile {
   id: string;
@@ -30,6 +37,8 @@ const Agentes = () => {
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedAgent, setSelectedAgent] = useState<Profile | null>(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   useEffect(() => {
     fetchAgents();
@@ -90,12 +99,20 @@ const Agentes = () => {
   const totalConversations = Object.values(agentStats).reduce((sum, stats) => sum + stats.conversations, 0);
   const totalAppointments = Object.values(agentStats).reduce((sum, stats) => sum + stats.appointments, 0);
 
+  const handleAddAgent = () => {
+    setShowAddDialog(true);
+  };
+
+  const handleViewDetails = (agent: Profile) => {
+    setSelectedAgent(agent);
+  };
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-3xl font-bold text-foreground">Agentes</h1>
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={handleAddAgent}>
             <UserPlus className="w-4 h-4" />
             Adicionar Agente
           </Button>
@@ -220,7 +237,7 @@ const Agentes = () => {
                     </div>
                   </div>
 
-                  <Button variant="outline" className="w-full mt-4">
+                  <Button variant="outline" className="w-full mt-4" onClick={() => handleViewDetails(agent)}>
                     Ver Detalhes
                   </Button>
                 </CardContent>
@@ -229,6 +246,99 @@ const Agentes = () => {
           })}
         </div>
       )}
+
+      {/* Dialog Adicionar Agente */}
+      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Adicionar Novo Agente</DialogTitle>
+            <DialogDescription>
+              Para adicionar um novo agente à sua equipe, é necessário criar uma conta de usuário primeiro.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Novos agentes devem:
+            </p>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+              <li>Acessar a página de cadastro</li>
+              <li>Criar uma conta com email e senha</li>
+              <li>Após o cadastro, o agente aparecerá automaticamente nesta lista</li>
+            </ol>
+            <Button 
+              className="w-full" 
+              onClick={() => {
+                toast({
+                  title: "Instrução",
+                  description: "Compartilhe o link de cadastro com o novo agente para que ele crie sua conta.",
+                });
+                setShowAddDialog(false);
+              }}
+            >
+              Entendi
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Ver Detalhes */}
+      <Dialog open={!!selectedAgent} onOpenChange={() => setSelectedAgent(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Detalhes do Agente</DialogTitle>
+          </DialogHeader>
+          {selectedAgent && (
+            <div className="space-y-4 py-4">
+              <div className="flex items-center gap-4">
+                <Avatar className="w-16 h-16">
+                  <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-xl">
+                    {selectedAgent.full_name
+                      .split(' ')
+                      .map(n => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h3 className="font-semibold text-lg">{selectedAgent.full_name}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Membro desde {new Date(selectedAgent.created_at).toLocaleDateString('pt-BR')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 border-t pt-4">
+                <h4 className="font-medium">Estatísticas</h4>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center p-3 bg-accent rounded-lg">
+                    <div className="text-2xl font-bold text-primary">
+                      {agentStats[selectedAgent.id]?.contacts || 0}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">Contatos</div>
+                  </div>
+                  <div className="text-center p-3 bg-accent rounded-lg">
+                    <div className="text-2xl font-bold text-primary">
+                      {agentStats[selectedAgent.id]?.conversations || 0}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">Conversas</div>
+                  </div>
+                  <div className="text-center p-3 bg-accent rounded-lg">
+                    <div className="text-2xl font-bold text-primary">
+                      {agentStats[selectedAgent.id]?.appointments || 0}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">Agendamentos</div>
+                  </div>
+                </div>
+              </div>
+
+              <Button className="w-full" onClick={() => setSelectedAgent(null)}>
+                Fechar
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
