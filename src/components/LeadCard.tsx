@@ -29,7 +29,7 @@ interface LeadCardProps {
 
 const LeadCard = ({ contact, provided, isDragging, onDelete }: LeadCardProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
-  const messageCount = contact.conversations?.[0]?.message_count || 0;
+  const messageCount = contact.conversation_count || 0;
   const lastContact = formatDistanceToNow(new Date(contact.last_contact), {
     addSuffix: true,
     locale: ptBR,

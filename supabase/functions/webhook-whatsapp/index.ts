@@ -93,6 +93,7 @@ serve(async (req) => {
         content: message,
         sender_type: "contact",
         sender_name: fromName || from,
+        contact_phone: from,
         read: false,
         metadata: {
           timestamp: timestamp || Date.now(),

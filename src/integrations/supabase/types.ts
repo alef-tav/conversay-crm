@@ -102,6 +102,7 @@ export type Database = {
       }
       contacts: {
         Row: {
+          conversation_count: number | null
           created_at: string
           id: string
           last_contact: string
@@ -112,6 +113,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          conversation_count?: number | null
           created_at?: string
           id?: string
           last_contact?: string
@@ -122,6 +124,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          conversation_count?: number | null
           created_at?: string
           id?: string
           last_contact?: string
@@ -233,6 +236,7 @@ export type Database = {
       }
       messages: {
         Row: {
+          contact_phone: string | null
           content: string
           conversation_id: number
           created_at: string
@@ -243,6 +247,7 @@ export type Database = {
           sender_type: string
         }
         Insert: {
+          contact_phone?: string | null
           content: string
           conversation_id: number
           created_at?: string
@@ -253,6 +258,7 @@ export type Database = {
           sender_type: string
         }
         Update: {
+          contact_phone?: string | null
           content?: string
           conversation_id?: number
           created_at?: string
