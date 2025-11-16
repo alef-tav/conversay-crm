@@ -13,6 +13,7 @@ export interface Contact {
   phone: string;
   stage: Stage;
   last_contact: string;
+  conversation_count?: number;
   conversations?: { message_count: number }[];
   tags?: { tag: { name: string; color: string } }[];
 }
